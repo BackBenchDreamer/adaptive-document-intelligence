@@ -46,3 +46,12 @@ tmp/
 
 # Logs
 *.log
+
+# Dataset files
+tests/SROIE2019/
+
+# Output and cache
+output/
+.pytest_cache/
+.coverage
+htmlcov/

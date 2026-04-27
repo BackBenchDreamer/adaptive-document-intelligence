@@ -1,0 +1,69 @@
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Testing and coverage
+.pytest_cache/
+.cache/
+htmlcov/
+.coverage
+.coverage.*
+*.cover
+.hypothesis/
+
+# Logs
+*.log
+logs/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation (not needed in container)
+*.md
+docs/
+examples/
+
+# Output directories (will be created in container)
+output/
+*.egg-info/
+dist/
+build/
+
+# Docker files (don't copy into container)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+
+# Dataset (CRITICAL - will be mounted as volume)
+tests/SROIE2019/
+tests/data/raw/

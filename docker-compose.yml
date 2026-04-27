@@ -1,0 +1,43 @@
+# Adaptive Document Intelligence System - Docker Compose Configuration
+# Phase 11: Containerization
+
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    
+    # Mount project code and dataset
+    volumes:
+      # Mount entire project for live development
+      - .:/app
+      # Mount SROIE2019 dataset as read-only
+      - ./tests/SROIE2019:/app/tests/SROIE2019:ro
+    
+    # Environment variables
+    environment:
+      # OCR Configuration
+      - TESSERACT_CMD=/usr/bin/tesseract
+      - OCR_ENGINE=tesseract
+      
+      # Python Configuration
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      
+      # ADI System Configuration (optional overrides)
+      - ADI_OCR_ENGINE=tesseract
+      - ADI_LOG_LEVEL=INFO
+    
+    # Working directory
+    working_dir: /app
+    
+    # Default command: run tests
+    command: python -m pytest -v
+    
+    # Keep container running for interactive use (optional)
+    # stdin_open: true
+    # tty: true
+
+# Made with Bob
