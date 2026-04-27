@@ -1,0 +1,36 @@
+feat: Initial implementation of invoice OCR pipeline
+
+Implements Phase 1 of the adaptive document intelligence system with a
+minimal, working end-to-end pipeline for invoice processing.
+
+Features:
+- FastAPI backend with /upload endpoint
+- PaddleOCR integration for text extraction
+- Regex-based field extraction (invoice_number, date, total_amount)
+- Comprehensive documentation split into focused guides
+- Test script and sample invoice for validation
+- Error handling and logging
+
+Technical Stack:
+- FastAPI 0.109.0 for REST API
+- PaddleOCR 2.7.3 for OCR
+- Python 3.8+ compatible
+
+Project Structure:
+- backend/ - FastAPI application and test script
+- docs/ - Modular documentation (SETUP, API, USAGE, ARCHITECTURE)
+- examples/ - Sample invoices for testing
+
+Design Decisions:
+- Simple regex patterns over ML models (fast iteration)
+- Clean separation: OCR layer → Extraction layer → JSON output
+- No database or async processing yet (keeping it minimal)
+- Focus on working end-to-end flow
+
+Next Steps:
+- Feedback collection system
+- ML model integration
+- Async processing with Celery
+- Production deployment
+
+Closes: Initial setup phase

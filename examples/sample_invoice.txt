@@ -1,0 +1,49 @@
+ACME CORPORATION
+123 Business Street
+New York, NY 10001
+Phone: (555) 123-4567
+Email: billing@acme.com
+
+═══════════════════════════════════════════════════════════
+
+                         INVOICE
+
+═══════════════════════════════════════════════════════════
+
+Invoice Number: INV-2024-001
+Date: 15/03/2024
+Due Date: 15/04/2024
+
+Bill To:
+Tech Solutions Inc.
+456 Innovation Drive
+San Francisco, CA 94102
+
+═══════════════════════════════════════════════════════════
+
+DESCRIPTION                          QTY    PRICE    AMOUNT
+───────────────────────────────────────────────────────────
+Software Development Services         40    $125.00  $5,000.00
+Cloud Infrastructure Setup             1    $800.00    $800.00
+Technical Consultation                10    $150.00  $1,500.00
+Monthly Support Package                1    $500.00    $500.00
+
+───────────────────────────────────────────────────────────
+                                    Subtotal:      $7,800.00
+                                         Tax (8%):   $624.00
+───────────────────────────────────────────────────────────
+                                 Total Amount:    $8,424.00
+═══════════════════════════════════════════════════════════
+
+Payment Terms: Net 30 days
+Payment Methods: Bank Transfer, Check, Credit Card
+
+Bank Details:
+Account Name: ACME Corporation
+Account Number: 1234567890
+Routing Number: 987654321
+
+Thank you for your business!
+
+For questions about this invoice, please contact:
+accounts@acme.com or call (555) 123-4567
