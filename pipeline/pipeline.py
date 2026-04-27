@@ -725,7 +725,7 @@ class PipelineManager:
                 pred_num = float(pred_str.replace('$', '').replace(',', ''))
                 true_num = float(true_str.replace('$', '').replace(',', ''))
                 return abs(pred_num - true_num) < 0.01
-            except:
+            except (ValueError, AttributeError):
                 return pred_str == true_str
         else:
             return pred_str == true_str

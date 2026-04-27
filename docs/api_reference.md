@@ -810,7 +810,7 @@ class DocumentProcessor:
 **Example:**
 
 ```python
-from pipeline import DocumentProcessor
+from pipeline.pipeline import DocumentProcessor
 
 # Initialize processor
 processor = DocumentProcessor(ocr_engine='tesseract')

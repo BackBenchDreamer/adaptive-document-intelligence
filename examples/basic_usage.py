@@ -5,7 +5,7 @@ This example demonstrates how to process a single document
 and extract structured fields.
 """
 
-from pipeline import DocumentProcessor
+from pipeline.pipeline import DocumentProcessor
 
 def main():
     """Process a single document and print results."""

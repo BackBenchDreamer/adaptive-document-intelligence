@@ -19,7 +19,7 @@ Complete guide for developers contributing to the Adaptive Document Intelligence
 
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.11 or higher
 - Git
 - Virtual environment tool (venv or conda)
 - Code editor (VS Code recommended)
@@ -586,7 +586,7 @@ class TestDateExtractor(unittest.TestCase):
 # tests/integration/test_pipeline_integration.py
 
 import unittest
-from pipeline import DocumentProcessor
+from pipeline.pipeline import DocumentProcessor
 
 class TestPipelineIntegration(unittest.TestCase):
     """Test integration between pipeline components."""
@@ -620,7 +620,7 @@ class TestPipelineIntegration(unittest.TestCase):
 
 import unittest
 from pathlib import Path
-from pipeline import DocumentProcessor
+from pipeline.pipeline import DocumentProcessor
 
 class TestFullPipeline(unittest.TestCase):
     """Test complete document processing pipeline."""

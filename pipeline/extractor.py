@@ -307,7 +307,7 @@ class DateExtractor(FieldExtractor):
                         if 1900 <= year <= 2100:
                             date_obj = datetime(year, month, day)
                             return date_obj.strftime('%Y-%m-%d')
-                    except:
+                    except (ValueError, TypeError):
                         pass
                     
                     # Try DDMMYYYY
@@ -317,7 +317,7 @@ class DateExtractor(FieldExtractor):
                         year = int(date_str[4:8])
                         date_obj = datetime(year, month, day)
                         return date_obj.strftime('%Y-%m-%d')
-                    except:
+                    except (ValueError, TypeError):
                         pass
         
         except (ValueError, IndexError) as e:

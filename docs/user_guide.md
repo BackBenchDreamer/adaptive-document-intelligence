@@ -33,7 +33,7 @@ python -c "from core.config import Config; print(Config.get_config_summary())"
 Process a single receipt:
 
 ```python
-from pipeline import DocumentProcessor
+from pipeline.pipeline import DocumentProcessor
 
 # Initialize processor
 processor = DocumentProcessor()
@@ -42,9 +42,9 @@ processor = DocumentProcessor()
 result = processor.process_document('receipt.jpg')
 
 # Print results
-print(f"Date: {result['date']['value']}")
-print(f"Total: {result['total']['value']}")
-print(f"Confidence: {result['date']['confidence']:.2f}")
+print(f"Date: {result['fields']['date']['value']}")
+print(f"Total: {result['fields']['total']['value']}")
+print(f"Confidence: {result['fields']['date']['confidence']:.2f}")
 ```
 
 ## Processing Documents
@@ -54,7 +54,7 @@ print(f"Confidence: {result['date']['confidence']:.2f}")
 #### Using Python API
 
 ```python
-from pipeline import DocumentProcessor
+from pipeline.pipeline import DocumentProcessor
 
 # Initialize with default settings
 processor = DocumentProcessor()
@@ -63,13 +63,13 @@ processor = DocumentProcessor()
 result = processor.process_document('path/to/receipt.jpg')
 
 # Access extracted fields
-date = result['date']['value']
-total = result['total']['value']
-invoice_number = result.get('invoice_number', {}).get('value')
+date = result['fields']['date']['value']
+total = result['fields']['total']['value']
+invoice_number = result['fields'].get('invoice_number', {}).get('value')
 
 # Check confidence scores
-date_confidence = result['date']['confidence']
-total_confidence = result['total']['confidence']
+date_confidence = result['fields']['date']['confidence']
+total_confidence = result['fields']['total']['confidence']
 
 print(f"Date: {date} (confidence: {date_confidence:.2f})")
 print(f"Total: {total} (confidence: {total_confidence:.2f})")
@@ -93,27 +93,29 @@ python scripts/run_pipeline.py --image receipt.jpg --output result.json
 #### Using Python API
 
 ```python
-from pipeline import BatchProcessor
+from pipeline.pipeline import DocumentProcessor
 from pathlib import Path
 
-# Initialize batch processor
-processor = BatchProcessor()
+# Initialize processor
+processor = DocumentProcessor()
 
-# Process directory
-results = processor.process_directory(
-    input_dir='receipts/',
-    output_file='results.json',
+# Get list of images
+image_paths = list(Path('receipts/').glob('*.jpg'))
+
+# Process batch
+results = processor.process_batch(
+    image_paths=image_paths,
     max_workers=4  # Parallel processing
 )
 
 # Analyze results
-successful = sum(1 for r in results if r['success'])
+successful = sum(1 for r in results if r.get('success', False))
 print(f"Processed: {successful}/{len(results)} documents")
 
 # Get failed documents
-failed = [r for r in results if not r['success']]
+failed = [r for r in results if not r.get('success', False)]
 for doc in failed:
-    print(f"Failed: {doc['filename']} - {doc['error']}")
+    print(f"Failed: {doc['image_path']} - {doc.get('error', 'Unknown error')}")
 ```
 
 #### Using Command Line
@@ -137,7 +139,7 @@ python scripts/run_pipeline.py --batch --input-dir receipts/ --workers 4
 #### Custom OCR Engine
 
 ```python
-from pipeline import DocumentProcessor
+from pipeline.pipeline import DocumentProcessor
 
 # Use specific OCR engine
 processor = DocumentProcessor(ocr_engine='tesseract')
@@ -184,32 +186,41 @@ if result['date']['confidence'] < 0.7:
 
 ```python
 result = {
-    'date': {
-        'value': '2024-01-15',           # Extracted value
-        'confidence': 0.92,               # Confidence score (0-1)
-        'raw_text': '15/01/2024',        # Original OCR text
-        'method': 'regex_pattern_1',     # Extraction method used
-        'position': {'x': 100, 'y': 50}  # Location in image
+    'image_path': 'receipt.jpg',
+    'ocr': {
+        'text': 'Receipt text...',
+        'confidence': 0.9,
+        'engine': 'tesseract',
+        'processing_time': 0.5
     },
-    'total': {
-        'value': 25.80,
-        'confidence': 0.88,
-        'raw_text': 'TOTAL: $25.80',
-        'method': 'keyword_search',
-        'currency': 'USD'
+    'fields': {
+        'date': {
+            'value': '2024-01-15',
+            'confidence': 0.92,
+            'extraction_confidence': 0.88,
+            'factors': {
+                'extraction': 0.88,
+                'ocr_quality': 0.90,
+                'value_validity': 0.95,
+                'pattern_strength': 0.85
+            }
+        },
+        'total': {
+            'value': 25.80,
+            'confidence': 0.88,
+            'extraction_confidence': 0.85,
+            'factors': {...}
+        },
+        'invoice_number': {
+            'value': 'INV-2024-001',
+            'confidence': 0.75,
+            'extraction_confidence': 0.72,
+            'factors': {...}
+        }
     },
-    'invoice_number': {
-        'value': 'INV-2024-001',
-        'confidence': 0.75,
-        'raw_text': 'Invoice #: INV-2024-001',
-        'method': 'pattern_match'
-    },
-    'metadata': {
-        'processing_time': 0.85,         # Seconds
-        'ocr_engine': 'tesseract',       # Engine used
-        'image_size': (1024, 768),       # Image dimensions
-        'timestamp': '2024-01-27T10:30:00Z'
-    }
+    'overall_confidence': 0.85,
+    'processing_time': 0.85,
+    'timestamp': '2024-01-27T10:30:00Z'
 }
 ```
 
@@ -234,19 +245,19 @@ Confidence scores range from 0.0 to 1.0:
 result = processor.process_document('receipt.jpg')
 
 # Safe access with defaults
-date = result.get('date', {}).get('value', 'Not found')
-total = result.get('total', {}).get('value', 0.0)
+date = result.get('fields', {}).get('date', {}).get('value', 'Not found')
+total = result.get('fields', {}).get('total', {}).get('value', 0.0)
 
 # Check if field was extracted
-if 'invoice_number' in result and result['invoice_number']['value']:
-    print(f"Invoice: {result['invoice_number']['value']}")
+if 'invoice_number' in result.get('fields', {}) and result['fields']['invoice_number']['value']:
+    print(f"Invoice: {result['fields']['invoice_number']['value']}")
 else:
     print("Invoice number not found")
 
 # Check confidence before using
-if result['date']['confidence'] > 0.7:
+if result['fields']['date']['confidence'] > 0.7:
     # Use the date
-    process_date(result['date']['value'])
+    process_date(result['fields']['date']['value'])
 else:
     # Request manual verification
     request_manual_review(result)
@@ -317,7 +328,7 @@ Load configuration:
 from dotenv import load_dotenv
 load_dotenv()
 
-from pipeline import DocumentProcessor
+from pipeline.pipeline import DocumentProcessor
 processor = DocumentProcessor()
 ```
 
@@ -491,7 +502,7 @@ if result['date']['confidence'] < MIN_CONFIDENCE:
 Always handle errors gracefully:
 
 ```python
-from pipeline import DocumentProcessor
+from pipeline.pipeline import DocumentProcessor
 
 processor = DocumentProcessor()
 
@@ -499,7 +510,7 @@ try:
     result = processor.process_document('receipt.jpg')
     
     # Check for successful extraction
-    if result.get('success', False):
+    if result.get('fields'):
         process_result(result)
     else:
         handle_extraction_failure(result)
@@ -516,14 +527,16 @@ except Exception as e:
 For large batches:
 
 ```python
-# Use parallel processing
-processor = BatchProcessor(max_workers=4)
+from pipeline.pipeline import DocumentProcessor
+
+# Initialize processor
+processor = DocumentProcessor()
 
 # Process in chunks
 chunk_size = 100
 for i in range(0, len(files), chunk_size):
     chunk = files[i:i+chunk_size]
-    results = processor.process_batch(chunk)
+    results = processor.process_batch(chunk, max_workers=4)
     save_results(results)
 ```
 
@@ -548,12 +561,13 @@ result = processor.process_document('receipt.jpg')  # Cached after first run
 ### Use Case 1: Receipt Processing System
 
 ```python
-from pipeline import DocumentProcessor
+from pipeline.pipeline import DocumentProcessor
+from pathlib import Path
 import json
 
 def process_receipt_batch(receipt_dir, output_file):
     """Process receipts and save to database."""
-    processor = DocumentProcessor(min_confidence=0.8)
+    processor = DocumentProcessor()
     results = []
     
     for receipt_file in Path(receipt_dir).glob('*.jpg'):
@@ -561,8 +575,8 @@ def process_receipt_batch(receipt_dir, output_file):
             result = processor.process_document(str(receipt_file))
             
             # Validate confidence
-            if result['date']['confidence'] > 0.8 and \
-               result['total']['confidence'] > 0.8:
+            if result['fields']['date']['confidence'] > 0.8 and \
+               result['fields']['total']['confidence'] > 0.8:
                 # Save to database
                 save_to_database(result)
                 results.append({'file': receipt_file.name, 'status': 'success'})
@@ -586,11 +600,13 @@ def process_receipt_batch(receipt_dir, output_file):
 ```python
 def validate_invoice(invoice_path, expected_total):
     """Validate invoice against expected total."""
+    from pipeline.pipeline import DocumentProcessor
+    
     processor = DocumentProcessor()
     result = processor.process_document(invoice_path)
     
-    extracted_total = result['total']['value']
-    confidence = result['total']['confidence']
+    extracted_total = result['fields']['total']['value']
+    confidence = result['fields']['total']['confidence']
     
     # Check if extraction is reliable
     if confidence < 0.85:
@@ -614,21 +630,24 @@ def validate_invoice(invoice_path, expected_total):
 ```python
 def generate_expense_report(receipts_dir, employee_id):
     """Generate expense report from receipts."""
+    from pipeline.pipeline import DocumentProcessor
+    from pathlib import Path
+    
     processor = DocumentProcessor()
     expenses = []
     
     for receipt in Path(receipts_dir).glob('*.jpg'):
         result = processor.process_document(str(receipt))
         
-        if result['date']['confidence'] > 0.7 and \
-           result['total']['confidence'] > 0.7:
+        if result['fields']['date']['confidence'] > 0.7 and \
+           result['fields']['total']['confidence'] > 0.7:
             expenses.append({
-                'date': result['date']['value'],
-                'amount': result['total']['value'],
+                'date': result['fields']['date']['value'],
+                'amount': result['fields']['total']['value'],
                 'receipt': receipt.name,
                 'confidence': min(
-                    result['date']['confidence'],
-                    result['total']['confidence']
+                    result['fields']['date']['confidence'],
+                    result['fields']['total']['confidence']
                 )
             })
     
@@ -664,6 +683,7 @@ def generate_expense_report(receipts_dir, employee_id):
 result = processor.process_document('receipt.jpg', preprocess=True)
 
 # Try different engine
+from pipeline.pipeline import DocumentProcessor
 processor = DocumentProcessor(ocr_engine='paddleocr')
 ```
 
@@ -685,7 +705,9 @@ Config.OCR_ENGINE = 'tesseract'
 Config.ENABLE_CACHE = True
 
 # Parallel processing
-processor = BatchProcessor(max_workers=4)
+from pipeline.pipeline import DocumentProcessor
+processor = DocumentProcessor()
+results = processor.process_batch(image_paths, max_workers=4)
 ```
 
 ### Memory Issues

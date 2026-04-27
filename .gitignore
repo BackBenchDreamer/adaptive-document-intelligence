@@ -52,6 +52,7 @@ tests/SROIE2019/
 
 # Output and cache
 output/
+results/
 .pytest_cache/
 .coverage
 htmlcov/

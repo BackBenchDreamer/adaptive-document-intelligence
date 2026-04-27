@@ -14,6 +14,7 @@ from .config import Config
 from .logging_config import setup_logging
 from .utils import (
     ensure_dir,
+    ensure_path_exists,
     load_json,
     save_json,
     get_file_hash,
@@ -24,6 +25,7 @@ __all__ = [
     "Config",
     "setup_logging",
     "ensure_dir",
+    "ensure_path_exists",
     "load_json",
     "save_json",
     "get_file_hash",

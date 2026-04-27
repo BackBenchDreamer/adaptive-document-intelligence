@@ -20,9 +20,9 @@ class Config:
     # Default configuration values
     DEFAULT_CONFIG = {
         "ocr": {
-            "engine": "easyocr",
+            "engine": "tesseract",
             "languages": ["en"],
-            "gpu": True,
+            "gpu": False,
             "confidence_threshold": 0.5,
         },
         "extraction": {

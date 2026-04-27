@@ -31,6 +31,19 @@ def ensure_dir(directory: Union[str, Path]) -> Path:
     return path
 
 
+def ensure_path_exists(directory: Union[str, Path]) -> Path:
+    """
+    Alias for ensure_dir for backward compatibility.
+    
+    Args:
+        directory: Directory path
+        
+    Returns:
+        Path object for the directory
+    """
+    return ensure_dir(directory)
+
+
 def load_json(filepath: Union[str, Path]) -> Dict[str, Any]:
     """
     Load JSON data from a file.
