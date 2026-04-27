@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Python 3.8+
+- Python 3.8+ (Python 3.14+ recommended)
 - pip
 
 ## Installation
@@ -16,45 +16,48 @@ cd adaptive-document-intelligence
 
 ### 2. Create a virtual environment
 
+**macOS/Linux:**
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+python3 -m venv venv
+source venv/bin/activate
 ```
 
-### 3. Install dependencies
+**Windows:**
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+### 3. Install Tesseract OCR Engine
+
+Tesseract is required for OCR functionality.
+
+**macOS:**
+```bash
+brew install tesseract
+```
+
+**Ubuntu/Debian:**
+```bash
+sudo apt-get install tesseract-ocr
+```
+
+**Windows:**
+Download and install from: https://github.com/UB-Mannheim/tesseract/wiki
+
+**Verify installation:**
+```bash
+tesseract --version
+```
+
+### 4. Install Python dependencies
 
 ```bash
 cd backend
 pip install -r requirements.txt
 ```
 
-**Note:** First-time installation may take a few minutes as PaddleOCR downloads its models.
-
-### Platform-Specific PaddlePaddle Installation
-
-PaddleOCR will automatically install PaddlePaddle. However, if you encounter issues:
-
-**macOS (Apple Silicon M1/M2/M3):**
-```bash
-pip install paddlepaddle
-```
-
-**macOS (Intel):**
-```bash
-pip install paddlepaddle
-```
-
-**Linux:**
-```bash
-pip install paddlepaddle
-```
-
-**Windows:**
-```bash
-pip install paddlepaddle
-```
-
-For GPU support or specific versions, see [PaddlePaddle Installation Guide](https://www.paddlepaddle.org.cn/en/install/quick).
+**Note:** Installation takes 1-2 minutes.
 
 ## Running the API
 
@@ -84,19 +87,26 @@ Expected response:
 
 ## Troubleshooting
 
-### PaddleOCR installation issues
+### Tesseract not found
 
-If you encounter issues with PaddleOCR:
+If you get "tesseract is not installed" error:
 
-1. Make sure you have the correct Python version (3.8+)
-2. Try installing PaddlePaddle separately first:
+1. Make sure Tesseract is installed (see step 3 above)
+2. Verify with: `tesseract --version`
+3. On macOS, if Homebrew installation fails, try:
    ```bash
-   pip install paddlepaddle
+   brew update
+   brew install tesseract
    ```
-3. Then install PaddleOCR:
-   ```bash
-   pip install paddleocr
-   ```
+4. On Windows, make sure Tesseract is in your PATH
+
+### Python version issues
+
+If you encounter Python compatibility issues:
+
+1. Make sure you have Python 3.8 or higher
+2. Check with: `python3 --version`
+3. Consider using Python 3.11 or 3.12 for best compatibility
 
 ### Port already in use
 

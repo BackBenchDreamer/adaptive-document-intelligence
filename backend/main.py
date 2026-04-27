@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from paddleocr import PaddleOCR
+import pytesseract
+from PIL import Image
 import re
 import os
 import tempfile
@@ -22,13 +23,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize PaddleOCR (runs once at startup)
-ocr = PaddleOCR(use_angle_cls=True, lang='en', show_log=False)
-
 
 def extract_text_from_image(image_path: str) -> str:
     """
-    Extract text from image using PaddleOCR
+    Extract text from image using Tesseract OCR
     
     Args:
         image_path: Path to the image file
@@ -37,18 +35,14 @@ def extract_text_from_image(image_path: str) -> str:
         Extracted text as a single string
     """
     try:
-        result = ocr.ocr(image_path, cls=True)
+        # Open image with PIL
+        image = Image.open(image_path)
         
-        # Extract text from OCR result
-        text_blocks = []
-        if result and result[0]:
-            for line in result[0]:
-                if line[1][0]:  # line[1][0] contains the text
-                    text_blocks.append(line[1][0])
+        # Extract text using pytesseract
+        text = pytesseract.image_to_string(image)
         
-        full_text = " ".join(text_blocks)
-        logger.info(f"Extracted text length: {len(full_text)} characters")
-        return full_text
+        logger.info(f"Extracted text length: {len(text)} characters")
+        return text
     
     except Exception as e:
         logger.error(f"OCR extraction failed: {str(e)}")

@@ -32,8 +32,8 @@ Upload → OCR → Extraction → JSON Output → Feedback → Dataset
 ## Tech Stack
 
 - **FastAPI** - Modern web framework
-- **PaddleOCR** - OCR engine
-- **spaCy / regex** - Text processing and pattern matching
+- **Tesseract OCR** - OCR engine
+- **Regex** - Text processing and pattern matching
 - **PostgreSQL** - Database (planned)
 - **Redis + Celery** - Task queue (planned)
 - **Docker** - Containerization (planned)
@@ -51,6 +51,29 @@ Upload → OCR → Extraction → JSON Output → Feedback → Dataset
 
 ### Quick Setup
 
+**macOS/Linux:**
+```bash
+# 1. Clone and navigate
+git clone <repository-url>
+cd adaptive-document-intelligence
+
+# 2. Install Tesseract OCR
+brew install tesseract  # macOS
+# sudo apt-get install tesseract-ocr  # Ubuntu/Debian
+
+# 3. Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# 4. Install dependencies
+cd backend
+pip install -r requirements.txt
+
+# 5. Run the server
+python main.py
+```
+
+**Windows:**
 ```bash
 # 1. Clone and navigate
 git clone <repository-url>
@@ -58,7 +81,7 @@ cd adaptive-document-intelligence
 
 # 2. Create virtual environment
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+venv\Scripts\activate
 
 # 3. Install dependencies
 cd backend
@@ -99,9 +122,10 @@ curl -X POST "http://localhost:8000/upload" \
 
 ✅ **Phase 1 Complete** - Basic OCR Pipeline
 - FastAPI endpoint working
-- PaddleOCR integration
+- Tesseract OCR integration
 - Regex-based field extraction
 - JSON output
+- Python 3.14+ compatible
 
 🚧 **Next Steps**
 - Feedback collection system

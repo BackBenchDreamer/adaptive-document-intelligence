@@ -52,18 +52,19 @@
 - Temporary file handling
 - Comprehensive error messages
 
-#### 2. OCR Layer (PaddleOCR)
+#### 2. OCR Layer (Tesseract OCR)
 
 **Function:** `extract_text_from_image()`
 
-**Input:** Image file path  
+**Input:** Image file path
 **Output:** Raw text string
 
-**Why PaddleOCR?**
-- Fast and accurate
+**Why Tesseract OCR?**
+- Open source and mature
 - No API costs
 - Runs locally
-- Supports multiple languages
+- Wide platform support
+- Compatible with Python 3.14+
 
 #### 3. Extraction Layer (Regex)
 

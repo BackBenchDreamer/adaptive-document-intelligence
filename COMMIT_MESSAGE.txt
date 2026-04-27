@@ -1,20 +1,22 @@
-feat: Initial implementation of invoice OCR pipeline
+feat: Initial implementation of invoice OCR pipeline with Tesseract
 
 Implements Phase 1 of the adaptive document intelligence system with a
 minimal, working end-to-end pipeline for invoice processing.
 
 Features:
 - FastAPI backend with /upload endpoint
-- PaddleOCR integration for text extraction
+- Tesseract OCR integration for text extraction
 - Regex-based field extraction (invoice_number, date, total_amount)
 - Comprehensive documentation split into focused guides
 - Test script and sample invoice for validation
 - Error handling and logging
+- Python 3.14+ compatible
 
 Technical Stack:
 - FastAPI 0.109.0 for REST API
-- PaddleOCR 2.7.3 for OCR
-- Python 3.8+ compatible
+- Tesseract OCR 5.5.2 for text extraction
+- pytesseract 0.3.13+ for Python bindings
+- Python 3.8+ compatible (tested on 3.14)
 
 Project Structure:
 - backend/ - FastAPI application and test script
@@ -22,10 +24,16 @@ Project Structure:
 - examples/ - Sample invoices for testing
 
 Design Decisions:
+- Tesseract OCR over PaddleOCR (better Python 3.14+ compatibility)
 - Simple regex patterns over ML models (fast iteration)
 - Clean separation: OCR layer → Extraction layer → JSON output
 - No database or async processing yet (keeping it minimal)
 - Focus on working end-to-end flow
+
+Dependency Resolution:
+- Fixed PaddlePaddle compatibility issues with Python 3.14
+- Switched to Tesseract OCR for wider platform support
+- Updated pytesseract to 0.3.13+ for Python 3.14 compatibility
 
 Next Steps:
 - Feedback collection system
